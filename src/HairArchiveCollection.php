@@ -67,14 +67,23 @@ class HairArchiveCollection extends BaseStringPrimaryCollection
 
     protected function registerItems(): void
     {
-        $archives = FileHelper::createFileFinder($this->folder)
+        $downloads = DownloadedFileCollection::getInstance()->getAll();
+
+        foreach($downloads as $download) {
+            $this->registerDownloadFiles($download);
+        }
+    }
+
+    private function registerDownloadFiles(DownloadedFile $download) : void
+    {
+        $archives = FileHelper::createFileFinder($download->getFolder())
             ->includeExtension('archive')
             ->setPathmodeAbsolute()
             ->makeRecursive()
             ->getAll();
 
         foreach($archives as $archive) {
-            $this->registerItem(new HairArchive(FileInfo::factory($archive)));
+            $this->registerItem(new HairArchive($download, FileInfo::factory($archive)));
         }
 
         uasort($this->items, static function(HairArchive $a, HairArchive $b) {
