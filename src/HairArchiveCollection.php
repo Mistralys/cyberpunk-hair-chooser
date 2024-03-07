@@ -16,6 +16,7 @@ use AppUtils\FileHelper\FolderInfo;
  */
 class HairArchiveCollection extends BaseStringPrimaryCollection
 {
+    public const REQUEST_VAR_ARCHIVE_ID = 'archive';
     private FolderInfo $folder;
 
     public function __construct(string $folder)
@@ -63,6 +64,15 @@ class HairArchiveCollection extends BaseStringPrimaryCollection
         ksort($grouped);
 
         return $grouped;
+    }
+
+    public function getByRequest() : ?HairArchive
+    {
+        if(isset($_REQUEST[self::REQUEST_VAR_ARCHIVE_ID])) {
+            return $this->getByID($_REQUEST[self::REQUEST_VAR_ARCHIVE_ID]);
+        }
+
+        return null;
     }
 
     protected function registerItems(): void

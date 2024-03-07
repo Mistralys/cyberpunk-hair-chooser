@@ -15,6 +15,7 @@ use AppUtils\FileHelper\JSONFile;
  */
 class DownloadedFileCollection extends BaseStringPrimaryCollection
 {
+    public const REQUEST_VAR_DOWNLOAD_ID = 'download';
     /**
      * @var string[]
      */
@@ -63,6 +64,15 @@ class DownloadedFileCollection extends BaseStringPrimaryCollection
     public function getByFileName(string $fileName) : DownloadedFile
     {
         return $this->getByID($fileName);
+    }
+
+    public function getByRequest() : ?DownloadedFile
+    {
+        if(isset($_REQUEST[self::REQUEST_VAR_DOWNLOAD_ID])) {
+            return $this->getByID($_REQUEST[self::REQUEST_VAR_DOWNLOAD_ID]);
+        }
+
+        return null;
     }
 
     /**
