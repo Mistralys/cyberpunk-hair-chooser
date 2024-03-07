@@ -26,6 +26,7 @@ class UserInterface
     public const PAGE_BUILD_MOD = 'build-mod';
     public const PAGE_DELETE_MOD = 'delete-mod';
     public const PAGE_MODS_LIST = 'mods-list';
+    public const PAGE_MEDIA_VIEWER = 'media-viewer';
 
     private static ?UserInterface $instance = null;
 
@@ -68,6 +69,9 @@ class UserInterface
             ->setInNav(false);
 
         $this->addPage(self::PAGE_DELETE_MOD, t('Delete mod'), __DIR__.'/../pages/mod-delete.php')
+            ->setInNav(false);
+
+        $this->addPage(self::PAGE_MEDIA_VIEWER, t('Media viewer'), __DIR__.'/../pages/media-viewer.php')
             ->setInNav(false);
     }
 
