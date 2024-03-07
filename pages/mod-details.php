@@ -151,6 +151,19 @@ if($activeMod instanceof HairMod)
                         }
                         ?>
                     </select>
+                    <div class="previews">
+                    <?php
+                    foreach($archives as $archive)
+                    {
+                        ?><img    src="<?php echo $archive->getImageURL() ?>"
+                                title="<?php echo $archive->getPrettyLabel() ?>"
+                                alt=""
+                                class="thumbnail clickable"
+                                onclick="document.getElementById('<?php echo $id ?>').value = '<?php echo $archive->getID() ?>'"
+                        ><?php
+                    }
+                    ?>
+                    </div>
                 </td>
             </tr>
             <?php
