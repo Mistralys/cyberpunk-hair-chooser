@@ -92,7 +92,7 @@ if($activeMod instanceof HairMod)
 
     <div class="mb-3">
         <label for="elModVersion" class="form-label"><?php pt('Version') ?></label>
-        <input type="text" name="label" class="form-control" id="elModVersion" value="<?php echo htmlspecialchars($defaultData['version']) ?>">
+        <input type="text" name="version" class="form-control" id="elModVersion" value="<?php echo htmlspecialchars($defaultData['version']) ?>">
         <div class="form-text">
             <?php echo sb()
                 ->t('This gets added to the built file name to track changes.')
