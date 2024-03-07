@@ -40,7 +40,10 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
         <tr>
             <th class="small"><?php pt('Number') ?></th>
             <th class="small"><?php pt('Name') ?></th>
-            <th><?php pt('Source file'); ?></th>
+            <th>
+                <?php pt('Source file'); ?>
+                <small class="xs">(<?php pt('Mod file in tooltip'); ?>)</small>
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -66,7 +69,9 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
                            style="width: 20rem"
                 </td>
                 <td>
-                    <small><small class="monospace"><?php echo $archive->getName() ?></small></small>
+                    <small class="s monospace" title="<?php echo $archive->getDownload()->getName() ?>">
+                        <?php echo $archive->getName() ?>
+                    </small>
                 </td>
             </tr>
             <?php
