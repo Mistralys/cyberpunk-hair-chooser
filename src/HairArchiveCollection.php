@@ -16,21 +16,16 @@ use AppUtils\FileHelper\FolderInfo;
  */
 class HairArchiveCollection extends BaseStringPrimaryCollection
 {
-    /**
-     * @var FolderInfo[]
-     */
-    private array $folders = array();
+    private FolderInfo $folder;
 
-    public function __construct(array $folders)
+    public function __construct(string $folder)
     {
-        foreach ($folders as $folder) {
-            $this->folders[] = FolderInfo::factory($folder);
-        }
+        $this->folder = FolderInfo::factory($folder);
     }
 
     public static function factory() : HairArchiveCollection
     {
-        return new HairArchiveCollection(HAIR_MOD_FOLDERS);
+        return new HairArchiveCollection(MODS_EXTRACT_FOLDER);
     }
 
     public function getDefaultID(): string
@@ -72,18 +67,7 @@ class HairArchiveCollection extends BaseStringPrimaryCollection
 
     protected function registerItems(): void
     {
-        foreach($this->folders as $folder) {
-            $this->registerFolderItems($folder);
-        }
-
-        uasort($this->items, static function(HairArchive $a, HairArchive $b) {
-            return $a->getLabel() <=> $b->getLabel();
-        });
-    }
-
-    private function registerFolderItems(mixed $folder) : void
-    {
-        $archives = FileHelper::createFileFinder($folder)
+        $archives = FileHelper::createFileFinder($this->folder)
             ->includeExtension('archive')
             ->setPathmodeAbsolute()
             ->makeRecursive()
@@ -92,5 +76,9 @@ class HairArchiveCollection extends BaseStringPrimaryCollection
         foreach($archives as $archive) {
             $this->registerItem(new HairArchive(FileInfo::factory($archive)));
         }
+
+        uasort($this->items, static function(HairArchive $a, HairArchive $b) {
+            return $a->getLabel() <=> $b->getLabel();
+        });
     }
 }
