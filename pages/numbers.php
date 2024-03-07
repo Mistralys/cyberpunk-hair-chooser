@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace Mistralys\CPHairChooser;
 
 use AppUtils\JSHelper;
+use function AppLocalize\pt;
 use function AppUtils\sb;
 
 $collection = HairArchiveCollection::factory();
 $archives = $collection->getAll();
 $ui = UserInterface::getInstance();
+
+usort($archives, static function(HairArchive $a, HairArchive $b) : int {
+    return strnatcasecmp($a->getPrettyLabel(), $b->getPrettyLabel());
+});
 
 if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
 {
@@ -33,9 +38,9 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
     <table class="table table-hover">
         <thead>
         <tr>
-            <th style="text-align: right">Name</th>
-            <th>Number</th>
-            <th>Pretty name</th>
+            <th class="small"><?php pt('Number') ?></th>
+            <th class="small"><?php pt('Name') ?></th>
+            <th><?php pt('Source file'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -46,11 +51,7 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
             $id = JSHelper::nextElementID();
             ?>
             <tr>
-                <td style="text-align: right;white-space: nowrap;width:1%;vertical-align: top">
-                    <label for="<?php echo $id ?>"><?php echo $archive->getLabel(); ?></label><br>
-                    <small><small><code><?php echo $archive->getName() ?></code></small></small>
-                </td>
-                <td style="vertical-align: top;width: 1%">
+                <td class="small">
                     <input  type="number"
                             name="<?php echo $archive->getID() ?>[number]"
                             id="<?php echo $id ?>"
@@ -58,11 +59,14 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
                             style="width: 4rem"
                     />
                 </td>
-                <td>
+                <td class="small">
                     <input type="text"
                            name="<?php echo $archive->getID() ?>[label]"
                            value="<?php echo htmlspecialchars($archive->getPrettyLabel()) ?>"
-                           style="width: 30rem"
+                           style="width: 20rem"
+                </td>
+                <td>
+                    <small><small class="monospace"><?php echo $archive->getName() ?></small></small>
                 </td>
             </tr>
             <?php
@@ -73,6 +77,9 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
     <hr>
     <p>
         <input type="hidden" name="save" value="yes">
-        <button type="submit" class="btn btn-primary">Save settings</button>
+        <button type="submit" class="btn btn-primary">
+            <?php echo Icons::SAVE ?>
+            <?php pt('Save settings') ?>
+        </button>
     </p>
 </form>
