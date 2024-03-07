@@ -30,3 +30,7 @@ TH.align-center,
 TD.align-center{
     text-align: center;
 }
+
+.monospace{
+    font-family: monospace;
+}
