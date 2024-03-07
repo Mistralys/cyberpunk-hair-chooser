@@ -67,7 +67,7 @@ if(isset($_REQUEST['extract']) && $_REQUEST['extract'] === 'yes')
 </table>
 <p>
     <a type="submit" class="btn btn-primary" href="<?php echo $activePage->getAdminURL(array('extract' => 'yes')) ?>">
-        <i class="fa-solid fa-box-open"></i>
+        <?php echo Icons::EXTRACT ?>
         <?php pt('Extract all non-extracted') ?>
     </a>
 </p>

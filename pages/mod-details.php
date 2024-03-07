@@ -162,6 +162,9 @@ if($activeMod instanceof HairMod)
     <p>
         <input type="hidden" name="page" value="<?php echo UserInterface::PAGE_ADD_MOD ?>">
         <input type="hidden" name="save" value="yes">
-        <button type="submit" class="btn btn-primary">Save settings</button>
+        <button type="submit" class="btn btn-primary">
+            <?php echo Icons::SAVE ?>
+            <?php pt('Save settings') ?>
+        </button>
     </p>
 </form>

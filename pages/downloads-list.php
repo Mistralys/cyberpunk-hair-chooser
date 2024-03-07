@@ -70,7 +70,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] === 'extract')
     <p>
         <input type="hidden" name="page" value="<?php echo $activePage->getID() ?>">
         <button class="btn btn-primary" type="submit" name="action" value="extract">
-            <i class="fa-solid fa-floppy-disk"></i>
+            <?php echo Icons::SAVE ?>
             <?php pt('Save selection'); ?>
         </button>
     </p>
