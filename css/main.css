@@ -16,6 +16,10 @@
     margin-bottom: 0;
 }
 
+.clickable{
+    cursor: pointer;
+}
+
 TH.small,
 TD.small{
     width: 1%;
@@ -33,4 +37,22 @@ TD.align-center{
 
 .monospace{
     font-family: monospace;
+}
+
+SMALL.s{
+    font-size: 0.7rem;
+}
+
+SMALL.xs {
+    font-size: 0.6rem;
+}
+
+IMG.thumbnail{
+    width: 5rem;
+    display: inline-block;
+    padding: 0.1rem;
+}
+
+.previews{
+    padding-top: 1rem;
 }
