@@ -74,6 +74,7 @@ class HairArchive implements StringPrimaryRecordInterface
 
     private array $stripWords = array(
         'hair',
+        'femv'
     );
 
     public function getLabel() : string
