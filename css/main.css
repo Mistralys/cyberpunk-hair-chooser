@@ -1,0 +1,32 @@
+.page-header{
+    margin-bottom: 2rem;
+}
+
+.page-title{
+    padding: 0;
+    margin: 0;
+}
+
+.page-title.with-abstract{
+    margin-bottom: 0.8rem;
+}
+
+.page-abstract{
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+TH.small,
+TD.small{
+    width: 1%;
+}
+
+TH.align-right,
+TD.align-right{
+    text-align: right;
+}
+
+TH.align-center,
+TD.align-center{
+    text-align: center;
+}
