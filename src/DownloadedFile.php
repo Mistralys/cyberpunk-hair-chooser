@@ -59,4 +59,9 @@ class DownloadedFile implements StringPrimaryRecordInterface
 
         return $this;
     }
+
+    public function getFolder() : FolderInfo
+    {
+        return $this->extractFolder;
+    }
 }
