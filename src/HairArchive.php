@@ -49,6 +49,47 @@ class HairArchive implements StringPrimaryRecordInterface
         }
     }
 
+    /**
+     * @var string[]
+     */
+    private array $imageExtensions = array(
+        'png',
+        'webp',
+        'jpg',
+        'jpeg',
+        'gif'
+    );
+
+    public function getImageFile() : ?FileInfo
+    {
+        // Do we know this file already?
+        foreach($this->imageExtensions as $ext) {
+            $file = FileInfo::factory(__DIR__.'/../img/previews/'.$this->getID().'.'.$ext);
+            if($file->exists()) {
+                return $file;
+            }
+        }
+
+        $path = $this->archiveFile->getPath();
+
+        // Try to find an image with the same file name
+        foreach($this->imageExtensions as $ext) {
+            $file = FileInfo::factory(str_replace('.archive', '.'.$ext, $path));
+            if($file->exists()) {
+                $this->savePreviewCache($file);
+                return $file;
+            }
+        }
+
+        return null;
+    }
+
+    private function savePreviewCache(FileInfo $imageFile) : void
+    {
+        $cached = FileInfo::factory(__DIR__.'/../img/previews/'.$this->getID().'.'.$imageFile->getExtension());
+        $imageFile->copyTo($cached);
+    }
+
     public function getDownload(): DownloadedFile
     {
         return $this->download;
@@ -161,5 +202,19 @@ class HairArchive implements StringPrimaryRecordInterface
     public function getFilePath() : string
     {
         return $this->archiveFile->getPath();
+    }
+
+    public function getImageURL() : string
+    {
+        $params = array();
+        $imageFile = $this->getImageFile();
+
+        if($imageFile !== null) {
+            $params[HairArchiveCollection::REQUEST_VAR_ARCHIVE_ID] = $this->getID();
+        }
+
+        return UserInterface::getInstance()
+            ->getPageByID(UserInterface::PAGE_MEDIA_VIEWER)
+            ->getAdminURL($params);
     }
 }
