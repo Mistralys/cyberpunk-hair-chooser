@@ -16,11 +16,14 @@
     ]
   },
   "require": {
-    "mistralys/application-utils-core": ">=1.1.2",
+    "mistralys/application-utils": ">=3.0.4",
     "mistralys/application-utils-collections": ">=1.1.1",
     "mistralys/application-localization": ">=1.4.1",
     "fortawesome/font-awesome": ">=6.5.1",
     "twbs/bootstrap": ">=v5.3.3",
     "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
   }
 }
