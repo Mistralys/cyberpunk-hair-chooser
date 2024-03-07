@@ -7,8 +7,8 @@ namespace Mistralys\CPHairChooser;
 $activePage = UserInterface::getInstance()->getActivePage();
 $rendered = $activePage->render();
 
-include __DIR__.'/ui-messages.php';
 include __DIR__.'/navigation.php';
+include __DIR__.'/ui-messages.php';
 
 $title = $activePage->getTitle();
 $abstract = $activePage->getAbstract();
