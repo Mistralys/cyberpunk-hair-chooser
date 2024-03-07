@@ -11,18 +11,27 @@ use AppUtils\Interfaces\StringPrimaryRecordInterface;
 
 class HairArchive implements StringPrimaryRecordInterface
 {
-    const KEY_LABEL = 'label';
-    const KEY_NUMBER = 'number';
+    public const KEY_LABEL = 'label';
+    public const KEY_NUMBER = 'number';
+
     private FileInfo $archiveFile;
     private string $id;
     private JSONFile $dataFile;
     private ArrayDataCollection $data;
     private ?string $label = null;
+    private DownloadedFile $download;
 
-    public function __construct(FileInfo $archiveFile)
+    public function __construct(DownloadedFile $download, FileInfo $archiveFile)
     {
+        // The ID is based on the download's name and the archive file's name,
+        // so that the same archive can be used in different downloads without
+        // causing conflicts.
+        //
+        // Only the file names are used without paths to be path-independent.
+        $this->id = md5($download->getName().'-'.$archiveFile->getName());
+
+        $this->download = $download;
         $this->archiveFile = $archiveFile;
-        $this->id = md5($archiveFile->getPath());
         $this->dataFile = JSONFile::factory(__DIR__.'/../storage/numbers/'.$this->id.'.json');
         $this->data = new ArrayDataCollection();
 
@@ -38,6 +47,11 @@ class HairArchive implements StringPrimaryRecordInterface
         if($this->dataFile->exists()) {
             $this->data->setKeys($this->dataFile->parse());
         }
+    }
+
+    public function getDownload(): DownloadedFile
+    {
+        return $this->download;
     }
 
     public function getID(): string
