@@ -48,9 +48,11 @@ SMALL.xs {
 }
 
 IMG.thumbnail{
-    width: 5rem;
+    width: 30rem;
     display: inline-block;
-    padding: 0.1rem;
+    margin: 0.1rem;
+    border: solid 1px #000;
+    border-radius: 3px;
 }
 
 .previews{
