@@ -14,7 +14,8 @@ $collection = HairModCollection::factory();
     <thead>
         <tr>
             <th><?php pt('Name') ?></th>
-            <th><?php pt('Hair slots') ?></th>
+            <th class="align-right"><?php pt('Hair slots') ?></th>
+            <th class="align-right"><?php pt('Version') ?></th>
             <th><?php pt('Last modified') ?></th>
             <th></th>
         </tr>
@@ -28,8 +29,11 @@ $collection = HairModCollection::factory();
             <td>
                 <?php echo $mod->getLabel(); ?>
             </td>
-            <td>
+            <td class="align-right">
                 <?php echo $mod->countSlots() ?>
+            </td>
+            <td class="align-right">
+                <?php echo $mod->getVersion() ?>
             </td>
             <td>
                 <?php echo ConvertHelper::date2listLabel($mod->getLastModified(), true, true) ?>
