@@ -17,9 +17,9 @@ class ModBuilder
     {
         $this->mod = $mod;
         $this->zipFile = FileInfo::factory(sprintf(
-            '%s/%s-v%s.zip',
+            '%s/%s v%s.zip',
             BUILT_MODS_FOLDER,
-            $mod->getID(),
+            $mod->getLabel(),
             $mod->getVersion()
         ));
     }
@@ -41,15 +41,29 @@ class ModBuilder
 
         $archives = $this->mod->getArchives();
 
-        foreach($archives as $archive) {
+        foreach($archives as $archive)
+        {
+            $baseName = sprintf(
+                '%s-no%s',
+                ConvertHelper::transliterate($archive->getPrettyLabel()),
+                $archive->getNumbersAsString()
+            );
+
             $zip->addFile(
                 $archive->getFilePath(),
-                sprintf(
-                    '%s-no%02d.archive',
-                    ConvertHelper::transliterate($archive->getPrettyLabel()),
-                    $archive->getNumber()
-                )
+                $baseName.'.archive'
             );
+
+            $numbers = $archive->getNumbers();
+            foreach($numbers as $number) {
+                $imageFile = $archive->getImageFile($number);
+                if ($imageFile !== null) {
+                    $zip->addFile(
+                        $imageFile->getPath(),
+                        $baseName . $archive->getImageSuffix($number) . '.' . $imageFile->getExtension()
+                    );
+                }
+            }
         }
 
         $zip->save();

@@ -17,6 +17,7 @@ use AppUtils\FileHelper\FolderInfo;
 class HairArchiveCollection extends BaseStringPrimaryCollection
 {
     public const REQUEST_VAR_ARCHIVE_ID = 'archive';
+    public const REQUEST_VAR_HAIR_SLOT = 'slot';
     private FolderInfo $folder;
 
     public function __construct(string $folder)
@@ -35,7 +36,7 @@ class HairArchiveCollection extends BaseStringPrimaryCollection
     }
 
     /**
-     * @return array<string, HairArchive[]>
+     * @return array<int, HairArchive[]>
      */
     public function getGroupedByNumber() : array
     {
@@ -44,18 +45,20 @@ class HairArchiveCollection extends BaseStringPrimaryCollection
 
         foreach($archives as $archive)
         {
-            $number = $archive->getNumber();
+            $numbers = $archive->getNumbers();
 
-            if(!isset($grouped[$number])) {
-                $grouped[$number] = array();
+            foreach($numbers as $number) {
+                if (!isset($grouped[$number])) {
+                    $grouped[$number] = array();
+                }
+
+                $grouped[$number][] = $archive;
             }
-
-            $grouped[$number][] = $archive;
         }
 
         foreach($grouped as $number => $items) {
-            usort($items, static function(HairArchive $a, HairArchive $b) {
-                return strnatcasecmp($a->getPrettyLabel(), $b->getPrettyLabel());
+            usort($items, static function(HairArchive $a, HairArchive $b) use ($number) : int {
+                return strnatcasecmp($a->getPrettyLabel($number), $b->getPrettyLabel($number));
             });
 
             $grouped[$number] = $items;

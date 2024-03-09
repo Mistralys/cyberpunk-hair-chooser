@@ -48,7 +48,10 @@ class HairMod implements StringPrimaryRecordInterface
     {
         $archives = $this->getArchiveList();
 
-        $archives[$archive->getNumber()] = $archive->getID();
+        $numbers = $archive->getNumbers();
+        foreach($numbers as $number) {
+            $archives[$number] = $archive->getID();
+        }
 
         $this->data->setKey(self::KEY_ARCHIVES, $archives);
 
@@ -178,5 +181,11 @@ class HairMod implements StringPrimaryRecordInterface
     public function createBuilder() : ModBuilder
     {
         return new ModBuilder($this);
+    }
+
+    public function setLabel(string $label) : self
+    {
+        $this->data->setKey(self::KEY_LABEL, $label);
+        return $this;
     }
 }

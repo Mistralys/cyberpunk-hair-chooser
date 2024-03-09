@@ -8,6 +8,7 @@ use AppUtils\ArrayDataCollection;
 use AppUtils\FileHelper\FileInfo;
 use AppUtils\FileHelper\JSONFile;
 use AppUtils\Interfaces\StringPrimaryRecordInterface;
+use function AppLocalize\t;
 
 class HairArchive implements StringPrimaryRecordInterface
 {
@@ -60,11 +61,22 @@ class HairArchive implements StringPrimaryRecordInterface
         'gif'
     );
 
-    public function getImageFile() : ?FileInfo
+    public function getImageSuffix(int $number) : string
     {
+        if($this->isMultiSlot()) {
+            return '['.$number.']';
+        }
+
+        return '';
+    }
+
+    public function getImageFile(int $number) : ?FileInfo
+    {
+        $suffix = $this->getImageSuffix($number);
+
         // Do we know this file already?
         foreach($this->imageExtensions as $ext) {
-            $file = FileInfo::factory(__DIR__.'/../img/previews/'.$this->getID().'.'.$ext);
+            $file = FileInfo::factory(__DIR__.'/../img/previews/'.$this->getID().$suffix.'.'.$ext);
             if($file->exists()) {
                 return $file;
             }
@@ -74,9 +86,9 @@ class HairArchive implements StringPrimaryRecordInterface
 
         // Try to find an image with the same file name
         foreach($this->imageExtensions as $ext) {
-            $file = FileInfo::factory(str_replace('.archive', '.'.$ext, $path));
+            $file = FileInfo::factory(str_replace('.archive', $suffix.'.'.$ext, $path));
             if($file->exists()) {
-                $this->savePreviewCache($file);
+                $this->savePreviewCache($file, $number);
                 return $file;
             }
         }
@@ -84,9 +96,9 @@ class HairArchive implements StringPrimaryRecordInterface
         return null;
     }
 
-    private function savePreviewCache(FileInfo $imageFile) : void
+    private function savePreviewCache(FileInfo $imageFile, int $number) : void
     {
-        $cached = FileInfo::factory(__DIR__.'/../img/previews/'.$this->getID().'.'.$imageFile->getExtension());
+        $cached = FileInfo::factory(__DIR__.'/../img/previews/'.$this->getID().$this->getImageSuffix($number).'.'.$imageFile->getExtension());
         $imageFile->copyTo($cached);
     }
 
@@ -105,14 +117,24 @@ class HairArchive implements StringPrimaryRecordInterface
         return $this->archiveFile->getBaseName();
     }
 
-    public function getNumber() : int
+    public function getNumbers() : array
     {
-        $nr = $this->data->getInt(self::KEY_NUMBER);
-        if($nr > 0) {
-            return $nr;
+        $numbers = $this->data->getArray(self::KEY_NUMBER);
+        if(!empty($numbers)) {
+            return $numbers;
         }
 
-        return $this->autoDetectNumber();
+        return $this->autoDetectNumbers($this->archiveFile->getBaseName());
+    }
+
+    public function getNumbersAsString() : string
+    {
+        $numbers = $this->getNumbers();
+        if(count($numbers) === 1) {
+            return (string)$numbers[0];
+        }
+
+        return array_shift($numbers).'-'.array_pop($numbers);
     }
 
     private array $replacements = array(
@@ -159,30 +181,41 @@ class HairArchive implements StringPrimaryRecordInterface
         return $this->label;
     }
 
-    public function getPrettyLabel() : string
+    public function getPrettyLabel(?int $number=null) : string
     {
         $saved = $this->data->getString(self::KEY_LABEL);
         if(!empty($saved)) {
-            return $saved;
+            $label = $saved;
+        } else {
+            $label = $this->getLabel();
         }
 
-        return $this->getLabel();
-    }
-
-    private function autoDetectNumber() : int
-    {
-        preg_match('/no(\d+)/i', $this->archiveFile->getBaseName(), $matches);
-
-        if(isset($matches[1])) {
-            return (int)$matches[1];
+        if($number !== null && count($this->getNumbers()) > 1) {
+            $label .= ' ('.t('Nr %1$s', $number).')';
         }
 
-        return 0;
+        return $label;
     }
 
-    public function setNumber(int $number) : self
+    /**
+     * @return int[]
+     */
+    private function autoDetectNumbers(string $name) : array
     {
-        $this->data->setKey(self::KEY_NUMBER, $number);
+        preg_match('/no(\d+)-(\d+)|no(\d+)/i', $name, $matches);
+
+        if(isset($matches[3])) {
+            return array((int)$matches[3]);
+        }
+
+        return range((int)$matches[1], (int)$matches[2]);
+    }
+
+    public function setNumbers(string $number) : self
+    {
+        $range = $this->autoDetectNumbers('no'.$number);
+
+        $this->data->setKey(self::KEY_NUMBER, $range);
 
         return $this->save();
     }
@@ -204,17 +237,23 @@ class HairArchive implements StringPrimaryRecordInterface
         return $this->archiveFile->getPath();
     }
 
-    public function getImageURL() : string
+    public function getImageURL(int $number) : string
     {
         $params = array();
-        $imageFile = $this->getImageFile();
+        $imageFile = $this->getImageFile($number);
 
         if($imageFile !== null) {
+            $params[HairArchiveCollection::REQUEST_VAR_HAIR_SLOT] = $number;
             $params[HairArchiveCollection::REQUEST_VAR_ARCHIVE_ID] = $this->getID();
         }
 
         return UserInterface::getInstance()
             ->getPageByID(UserInterface::PAGE_MEDIA_VIEWER)
             ->getAdminURL($params);
+    }
+
+    private function isMultiSlot() : bool
+    {
+        return count($this->getNumbers()) > 1;
     }
 }

@@ -21,8 +21,8 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
     foreach($archives as $archive)
     {
         $id = $archive->getID();
-        $archive->setNumber((int)$_REQUEST[$id]['number']);
-        $archive->setPrettyLabel((string)$_REQUEST[$id]['label']);
+        $archive->setNumbers(trim((string)$_REQUEST[$id]['number']));
+        $archive->setPrettyLabel(htmlspecialchars(trim((string)$_REQUEST[$id]['label'])));
     }
 
     $ui->addSuccessMessage(
@@ -34,6 +34,17 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
 }
 
 ?>
+<p>
+    <?php echo sb()
+        ->noteBold()
+        ->t('Archives can contain several hair slots.')
+        ->t('In this case, specify the slot numbers separated with dashes (-).')
+        ->t(
+            'If an archive file contains a number range, e.g. %1$s, it is automatically converted to a list of numbers.',
+            sb()->code('no1-5')
+        )
+    ?>
+</p>
 <form method="post">
     <table class="table table-hover">
         <thead>
@@ -55,10 +66,10 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
             ?>
             <tr>
                 <td class="small">
-                    <input  type="number"
+                    <input  type="text"
                             name="<?php echo $archive->getID() ?>[number]"
                             id="<?php echo $id ?>"
-                            value="<?php echo $archive->getNumber() ?>"
+                            value="<?php echo $archive->getNumbersAsString() ?>"
                             style="width: 4rem"
                     />
                 </td>

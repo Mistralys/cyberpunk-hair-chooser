@@ -33,6 +33,8 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
     }
 
     $mod->clearArchives();
+    $mod->setVersion(htmlspecialchars(trim((string)$_REQUEST['version'])));
+    $mod->setLabel(htmlspecialchars(trim((string)$_REQUEST['label'])));
 
     foreach($_REQUEST['archives'] as $archiveID)
     {
@@ -128,10 +130,6 @@ if($activeMod instanceof HairMod)
                         <option value="">[No hair]</option>
                         <?php
                         $value = '';
-                        if(count($archives) === 1) {
-                            $value = $archives[0]->getID();
-                        }
-
                         if(!empty($defaultData['archives'][$number])) {
                             $value = $defaultData['archives'][$number];
                         }
@@ -145,7 +143,7 @@ if($activeMod instanceof HairMod)
 
                             ?>
                             <option value="<?php echo $archive->getID() ?>" <?php echo $selected ?>>
-                                <?php echo htmlspecialchars($archive->getPrettyLabel()) ?>
+                                <?php echo htmlspecialchars($archive->getPrettyLabel($number)) ?>
                             </option>
                             <?php
                         }
@@ -155,8 +153,8 @@ if($activeMod instanceof HairMod)
                     <?php
                     foreach($archives as $archive)
                     {
-                        ?><img    src="<?php echo $archive->getImageURL() ?>"
-                                title="<?php echo $archive->getPrettyLabel() ?>"
+                        ?><img  src="<?php echo $archive->getImageURL($number) ?>"
+                                title="<?php echo $archive->getPrettyLabel($number) ?>"
                                 alt=""
                                 class="thumbnail clickable"
                                 onclick="document.getElementById('<?php echo $id ?>').value = '<?php echo $archive->getID() ?>'"
