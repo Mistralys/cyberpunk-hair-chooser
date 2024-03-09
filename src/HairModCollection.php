@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Mistralys\CPHairChooser;
 
 use AppUtils\Collections\BaseStringPrimaryCollection;
+use AppUtils\FileHelper;
+use AppUtils\FileHelper\FolderInfo;
 use AppUtils\FileHelper\JSONFile;
 use DirectoryIterator;
 
@@ -16,6 +18,12 @@ use DirectoryIterator;
 class HairModCollection extends BaseStringPrimaryCollection
 {
     public const REQUEST_PARAM_MOD_ID = 'modID';
+    private FolderInfo $storageFolder;
+
+    public function __construct()
+    {
+        $this->storageFolder = FolderInfo::factory(__DIR__.'/../storage/mods');
+    }
 
     public function getByRequest() : ?HairMod
     {
@@ -33,7 +41,9 @@ class HairModCollection extends BaseStringPrimaryCollection
 
     protected function registerItems(): void
     {
-        $d = new DirectoryIterator(__DIR__.'/../storage/mods');
+        $this->storageFolder->create();
+
+        $d = new DirectoryIterator($this->storageFolder->getPath());
         foreach($d as $item) {
             if($item->isDot() || !$item->isDir()) {
                 continue;
