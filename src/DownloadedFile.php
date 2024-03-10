@@ -21,7 +21,7 @@ class DownloadedFile implements StringPrimaryRecordInterface
         $this->extractFolder = FolderInfo::factory(sprintf(
             '%s/%s-%s',
             MODS_EXTRACT_FOLDER,
-            $this->file->getBaseName(),
+            str_replace('.', '-', $this->file->getBaseName()),
             $this->file->getExtension()
         ));
         $this->proofFile = FileInfo::factory($this->extractFolder->getPath().'/proof.txt');
