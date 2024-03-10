@@ -4,8 +4,18 @@ declare(strict_types=1);
 
 namespace Mistralys\CPHairChooser;
 
+use function AppUtils\parseThrowable;
+
 $activePage = UserInterface::getInstance()->getActivePage();
-$rendered = $activePage->render();
+
+try
+{
+    $rendered = $activePage->render();
+}
+catch(\Throwable $e)
+{
+    $rendered = '<pre>'.parseThrowable($e)->toString().'</pre>';
+}
 
 include __DIR__.'/navigation.php';
 include __DIR__.'/ui-messages.php';
