@@ -130,6 +130,11 @@ class HairArchive implements StringPrimaryRecordInterface
     public function getNumbersAsString() : string
     {
         $numbers = $this->getNumbers();
+
+        if(empty($numbers)) {
+            return '';
+        }
+        
         if(count($numbers) === 1) {
             return (string)$numbers[0];
         }
@@ -208,7 +213,11 @@ class HairArchive implements StringPrimaryRecordInterface
             return array((int)$matches[3]);
         }
 
-        return range((int)$matches[1], (int)$matches[2]);
+        if(isset($matches[1])) {
+            return range((int)$matches[1], (int)$matches[2]);
+        }
+
+        return array();
     }
 
     public function setNumbers(string $number) : self
