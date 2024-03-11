@@ -44,9 +44,9 @@ class ModBuilder
         foreach($archives as $archive)
         {
             $baseName = sprintf(
-                '%s-no%s',
-                ConvertHelper::transliterate($archive->getPrettyLabel()),
-                $archive->getNumbersAsString()
+                '[%s]-%s',
+                $archive->getNumbersAsString(),
+                ConvertHelper::transliterate($archive->getPrettyLabel())
             );
 
             $zip->addFile(
