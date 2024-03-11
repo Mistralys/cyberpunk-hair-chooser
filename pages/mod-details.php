@@ -156,7 +156,7 @@ if($activeMod instanceof HairMod)
                         ?><img  src="<?php echo $archive->getImageURL($number) ?>"
                                 title="<?php echo $archive->getPrettyLabel($number) ?>"
                                 alt=""
-                                class="thumbnail clickable"
+                                class="thumbnail clickable <?php echo $archive->getImageOrientation($number) ?>"
                                 onclick="document.getElementById('<?php echo $id ?>').value = '<?php echo $archive->getID() ?>'"
                         ><?php
                     }

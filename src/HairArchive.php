@@ -7,6 +7,7 @@ namespace Mistralys\CPHairChooser;
 use AppUtils\ArrayDataCollection;
 use AppUtils\FileHelper\FileInfo;
 use AppUtils\FileHelper\JSONFile;
+use AppUtils\ImageHelper;
 use AppUtils\Interfaces\StringPrimaryRecordInterface;
 use function AppLocalize\t;
 
@@ -14,6 +15,9 @@ class HairArchive implements StringPrimaryRecordInterface
 {
     public const KEY_LABEL = 'label';
     public const KEY_NUMBER = 'number';
+    public const ORIENTATION_LANDSCAPE = 'landscape';
+    public const ORIENTATION_SQUARE = 'square';
+    public const ORIENTATION_PORTRAIT = 'portrait';
 
     private FileInfo $archiveFile;
     private string $id;
@@ -259,6 +263,44 @@ class HairArchive implements StringPrimaryRecordInterface
         return UserInterface::getInstance()
             ->getPageByID(UserInterface::PAGE_MEDIA_VIEWER)
             ->getAdminURL($params);
+    }
+
+    private ?string $noPreviewOrientation = null;
+
+    public function getNoPreviewOrientation() : string
+    {
+        if(!isset($this->noPreviewOrientation)) {
+            $this->noPreviewOrientation = $this->resolveOrientation(__DIR__.'/../img/no-preview.jpg');
+        }
+
+        return $this->noPreviewOrientation;
+    }
+
+    private function resolveOrientation(string $path) : string
+    {
+        $helper = ImageHelper::createFromFile($path);
+        $size = $helper->getSize();
+        $helper->dispose();
+
+        if($size->getWidth() > $size->getHeight()) {
+            return self::ORIENTATION_LANDSCAPE;
+        }
+
+        if($size->getWidth() === $size->getHeight()) {
+            return self::ORIENTATION_SQUARE;
+        }
+
+        return self::ORIENTATION_PORTRAIT;
+    }
+
+    public function getImageOrientation(int $number) : string
+    {
+        $imageFile = $this->getImageFile($number);
+        if($imageFile !== null) {
+            return $this->resolveOrientation($imageFile->getPath());
+        }
+
+        return $this->getNoPreviewOrientation();
     }
 
     private function isMultiSlot() : bool

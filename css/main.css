@@ -48,11 +48,18 @@ SMALL.xs {
 }
 
 IMG.thumbnail{
-    width: 30rem;
     display: inline-block;
     margin: 0.1rem;
     border: solid 1px #000;
     border-radius: 3px;
+}
+
+IMG.thumbnail.landscape {
+    width: 30rem;
+}
+
+IMG.thumbnail.portrait {
+    height: 30rem;
 }
 
 .previews{
