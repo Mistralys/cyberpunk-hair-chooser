@@ -20,6 +20,11 @@
     cursor: pointer;
 }
 
+TH.nowrap,
+TD.nowrap{
+    white-space: nowrap;
+}
+
 TH.small,
 TD.small{
     width: 1%;
