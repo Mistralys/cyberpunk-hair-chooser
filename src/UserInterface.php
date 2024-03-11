@@ -53,10 +53,14 @@ class UserInterface
 
         $this->addPage(self::PAGE_NUMBERS, t('Hair archives'), __DIR__.'/../pages/numbers.php')
             ->setTitle(t('Available hair archive files'))
-            ->setAbstract(t('These are all hair archive files that were found in the specified folders.'));
+            ->setAbstract(t('These are all hair archive files that were found in the extracted mod folders.'));
 
         $this->addPage(self::PAGE_MODS_LIST, t('Mods'), __DIR__.'/../pages/mods-list.php')
-            ->setTitle(t('Available mod configurations'));
+            ->setTitle(t('Available mod configurations'))
+            ->setAbstract(sb()
+                ->t('These are all the mod configurations that have been created.')
+                ->t('Each can can be saved to a mod ZIP file with the %1$s link.', sb()->quote(t('Build')))
+            );
 
         $this->addPage(self::PAGE_ADD_MOD, t('Add mod'), __DIR__.'/../pages/mod-details.php')
             ->setTitle(t('Add a mod configuration'));

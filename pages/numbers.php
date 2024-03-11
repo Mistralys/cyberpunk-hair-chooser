@@ -27,7 +27,7 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
 
     $ui->addSuccessMessage(
         sprintf(
-            'The numbers have been saved successfully at %1$s.',
+            'The slot numbers have been saved successfully at %1$s.',
             sb()->time()
         ))
         ->redirectTo($ui->getActivePage()->getAdminURL());
@@ -49,8 +49,8 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
     <table class="table table-hover">
         <thead>
         <tr>
-            <th class="small"><?php pt('Number') ?></th>
-            <th class="small"><?php pt('Name') ?></th>
+            <th class="small nowrap align-right"><?php pt('Slot number') ?></th>
+            <th class="small"><?php pt('Hairstyle display name') ?></th>
             <th>
                 <?php pt('Source file'); ?>
                 <small class="xs">(<?php pt('Mod file in tooltip'); ?>)</small>
@@ -65,7 +65,7 @@ if(isset($_REQUEST['save']) && $_REQUEST['save'] === 'yes')
             $id = JSHelper::nextElementID();
             ?>
             <tr>
-                <td class="small">
+                <td class="small align-right">
                     <input  type="text"
                             name="<?php echo $archive->getID() ?>[number]"
                             id="<?php echo $id ?>"

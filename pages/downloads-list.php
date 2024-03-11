@@ -9,6 +9,7 @@ use AppUtils\FileHelper\FileInfo;
 use AppUtils\JSHelper;
 use DirectoryIterator;
 use function AppLocalize\pt;
+use function AppLocalize\pts;
 use function AppLocalize\t;
 use function AppUtils\sb;
 
@@ -35,6 +36,12 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] === 'extract')
 }
 
 ?>
+<p>
+    <?php
+    pts('Choose the mod ZIP files you want to use from this list.');
+    pts('Remember to save the selection.');
+    ?>
+</p>
 <form method="post">
     <table class="table table-hover">
         <thead>
